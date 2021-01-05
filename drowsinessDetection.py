@@ -1,5 +1,5 @@
 from threading import Thread
-from unittest.test.testmock.support import target
+
 
 import cv2
 import dlib
@@ -109,5 +109,6 @@ while True:
     key = cv2.waitKey(1)
     if key == 27:
         break
+
 cap.release()
 cv2.destroyAllWindows()
