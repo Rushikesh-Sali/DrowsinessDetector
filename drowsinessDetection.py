@@ -1,20 +1,24 @@
+from threading import Thread
+
 import cv2
 import dlib
 # import numpy as np
 from scipy.spatial import distance
+class eyes(Thread):
 
-def calculate_EAR(eye):
-    A = distance.euclidean(eye[1], eye[5])
-    B = distance.euclidean(eye[2], eye[4])
-    C = distance.euclidean(eye[0], eye[3])
-    ear_aspect_ratio = (A+B)/(2.0*C)
-    return ear_aspect_ratio
-def lip_distance(lip):
-    A = distance.euclidean(lip[2], lip[10])
-    B = distance.euclidean(lip[4], lip[8])
-    C = distance.euclidean(lip[0], lip[6])
-    lar_aspect_ratio = (A + B) / (2.0 * C)
-    return lar_aspect_ratio
+    def calculate_EAR(self,eye):
+        A = distance.euclidean(eye[1], eye[5])
+        B = distance.euclidean(eye[2], eye[4])
+        C = distance.euclidean(eye[0], eye[3])
+        ear_aspect_ratio = (A+B)/(2.0*C)
+        return ear_aspect_ratio
+class lips:
+    def lip_distance(self,lip):
+        A = distance.euclidean(lip[2], lip[10])
+        B = distance.euclidean(lip[4], lip[8])
+        C = distance.euclidean(lip[0], lip[6])
+        lar_aspect_ratio = (A + B) / (2.0 * C)
+        return lar_aspect_ratio
 
 
 cap = cv2.VideoCapture(0)
@@ -65,10 +69,11 @@ while True:
             x2 = face_landmarks.part(next_point).x
             y2 = face_landmarks.part(next_point).y
             cv2.line(frame,(x,y),(x2,y2),(0,255,0),1)
-
-        left_ear = calculate_EAR(leftEye)
-        right_ear = calculate_EAR(rightEye)
-        lip = lip_distance(lip)
+        object1 = eyes()
+        object2 = lips()
+        left_ear = object1.calculate_EAR(leftEye)
+        right_ear = object1.calculate_EAR(rightEye)
+        lip = object2.lip_distance(lip)
         EAR = (left_ear+right_ear)/2
         EAR = round(EAR,2)
         LAR =round(lip,2)
