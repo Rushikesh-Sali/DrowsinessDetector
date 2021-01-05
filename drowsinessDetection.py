@@ -1,4 +1,5 @@
 from threading import Thread
+from unittest.test.testmock.support import target
 
 import cv2
 import dlib
@@ -71,10 +72,19 @@ while True:
             cv2.line(frame,(x,y),(x2,y2),(0,255,0),1)
         object1 = eyes()
         object2 = lips()
-        left_ear = object1.calculate_EAR(leftEye)
-        right_ear = object1.calculate_EAR(rightEye)
+        T1 = Thread( target = object1.calculate_EAR , args=(leftEye,))
+
+        T2= Thread (target=object1.calculate_EAR, args =(rightEye,))
+        T1.start ()
+        T2.start ()
+
+
+        left_ear = T1.join ()
+        right_ear = T2.join ()
+        left_ear1 = int(left_ear)
+        right_ear1=int(right_ear)
         lip = object2.lip_distance(lip)
-        EAR = (left_ear+right_ear)/2
+        EAR = (left_ear1+right_ear1)/2
         EAR = round(EAR,2)
         LAR =round(lip,2)
         if EAR<0.26 or LAR >0.4:
