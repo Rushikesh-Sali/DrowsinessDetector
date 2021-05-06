@@ -3,6 +3,7 @@
 import playsound
 import cv2
 import dlib
+import time
 # import numpy as np
 from scipy.spatial import distance
 
@@ -21,13 +22,16 @@ def lip_distance(lip):
     lar_aspect_ratio = (A + B) / (2.0 * C)
     return lar_aspect_ratio
 
+EYE_ASPECT_RATIO_CONSEC_FRAMES = 50
 
-capture_duration = 10
+
+
 
 cap = cv2.VideoCapture(0)
 hog_face_detector = dlib.get_frontal_face_detector()
 dlib_facelandmark = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
-
+time.sleep(2)
+counter = 0
 while True:
     _, frame = cap.read()
     # cv2.waitkey(1)
@@ -80,15 +84,25 @@ while True:
         LAR = round (LAR, 2)
         EAR = (left_ear + right_ear) / 2
         EAR = round (EAR, 2)
-        if EAR < 0.26 or LAR > 0.62 :
-            cv2.putText (frame, "DROWSY", (20, 100),
+        count = 0
+
+        if EAR < 0.24 or LAR > 0.62:
+            counter+=1
+            if counter >= EYE_ASPECT_RATIO_CONSEC_FRAMES:
+                cv2.putText (frame, "DROWSY", (20, 100),
                          cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 0, 255), 4)
-            cv2.putText (frame, "Are you Sleepy?", (20, 400),
+                cv2.putText (frame, "Are you Sleepy?", (20, 400),
                          cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 4)
-            playsound.playsound("censor-beep-01.wav")
-            print ("Drowsy")
+                playsound.playsound("0.2 sec.wav")
+                print ("Drowsy")
+
+        else:
+            counter =0;
+
         print (EAR)
         print (LAR)
+
+
 
     cv2.imshow ("Are you Sleepy", frame)
 
