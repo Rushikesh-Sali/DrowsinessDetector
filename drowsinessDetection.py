@@ -86,7 +86,7 @@ while True:
         EAR = round (EAR, 2)
         count = 0
 
-        if EAR < 0.24 or LAR > 0.62:
+        if EAR < 0.26 or LAR > 0.62:
             counter+=1
             if counter >= EYE_ASPECT_RATIO_CONSEC_FRAMES:
                 cv2.putText (frame, "DROWSY", (20, 100),
