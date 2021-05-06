@@ -22,6 +22,7 @@ def lip_distance(lip):
     return lar_aspect_ratio
 
 
+capture_duration = 10
 
 cap = cv2.VideoCapture(0)
 hog_face_detector = dlib.get_frontal_face_detector()
@@ -75,16 +76,18 @@ while True:
         # object1 = eyes()
         left_ear = calculate_EAR(leftEye)
         right_ear = calculate_EAR(rightEye)
-
+        LAR = lip_distance(lip)
+        LAR = round (LAR, 2)
         EAR = (left_ear + right_ear) / 2
         EAR = round (EAR, 2)
-        if EAR < 0.26:
+        if EAR < 0.26 or LAR > 0.66 :
             cv2.putText (frame, "DROWSY", (20, 100),
                          cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 0, 255), 4)
             cv2.putText (frame, "Are you Sleepy?", (20, 400),
                          cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 4)
             print ("Drowsy")
         print (EAR)
+        print (LAR)
 
     cv2.imshow ("Are you Sleepy", frame)
 
